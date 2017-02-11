@@ -26,11 +26,20 @@
   .collection .collection-item.active {
     background-color: #1976D2; /* blue darken-2 */
   }
+  .timeline {
+    width: 100%;
+    height: 70px;
+    margin-top: 20px;
+  }
+  .workspace {
+    width: 100%;
+    min-height: 420px;
+  }
   </style>
 </head>
 </head>
 <body>
-  <!-- Main Nav bar -->
+  <!-- Main Nav bar. -->
   <div class="navbar-fixed">
     <nav>
       <div class="nav-wrapper blue darken-2">
@@ -45,7 +54,7 @@
     </nav>
   </div>
 
-  <!-- Main Settings Area -->
+  <!-- Main Settings Area. -->
   <div id="settings" class="blue darken-2 white-text" style="display: none">
     <br>
     <form class="container" name="settings">
@@ -61,6 +70,20 @@
         </div>
       </div>
     </form>
+  </div>
+
+  <!-- Main content. -->
+  <div class="container">
+    <!-- Timeline area. -->
+    <div class="row">
+      <div class="timeline grey lighten-2">
+      </div>
+    </div>
+    <!-- Workspace area. -->
+    <div class="row">
+      <div class="workspace grey lighten-2">
+      </div>
+    </div>
   </div>
 
   <!-- Import jQuery. -->

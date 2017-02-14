@@ -1,4 +1,4 @@
-
+/* HTML Styles ------------------------------------------------------------- */
 .collection-item:hover {
     background-color: #ddd;
 }
@@ -21,4 +21,14 @@
 .workspace {
     width: 100%;
     min-height: 420px;
+}
+
+
+/* SVG Styles -------------------------------------------------------------- */
+.bar {
+    fill: #b0bec5; /* blue-grey lighten-3 */
+}
+
+.bar:hover {
+    fill: #ff5722; /* deep-orange */
 }

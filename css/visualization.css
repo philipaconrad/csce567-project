@@ -14,7 +14,6 @@
 
 #performance {
     height: 180px;
-    margin-top: 20px;
 }
 
 #portfolio {
@@ -22,15 +21,21 @@
 }
 
 #warnings {
-    min-width: 200px;
-    min-height: 150px;
+    margin-top: 100px; /* Where the warnings top should be */
+    height: 200px;
 }
 
 #workspace {
-    margin-top: -30px;
     min-height: 420px;
 }
 
+.row {
+    margin-bottom: 20px;
+}
+
+.container {
+    margin-top: 20px;
+}
 
 /* SVG Styles -------------------------------------------------------------- */
 .bar {

@@ -1,30 +1,27 @@
 var timeline = { "svg": null,
     "g": null,
     "x": null,
-    "y": null,
-    "margin": {top: 0, right: 0, bottom: 0, left: 0}
+    "y": null
 };
-timeline.width = parseInt(d3.select('#timeline-div').style('width'), 10);
-timeline.width = timeline.width - timeline.margin.left - timeline.margin.right;
-timeline.height = 80 - timeline.margin.top - timeline.margin.bottom - 8;
+timeline.width = parseInt(d3.select('#performance').style('width'), 10);
+timeline.height = 180;
 
 
 // Function to display timeline.
 // Note: Requires some hacking for size and position adjustments.
 function renderTimeline() {
     // update width
-    timeline.width = parseInt(d3.select('#timeline-div').style('width'), 10) - timeline.margin.left - timeline.margin.right;
+    timeline.width = parseInt(d3.select('#performance').style('width'), 10);
 
     // remove it already displaying
     d3.select("svg").remove();
 
-    timeline.svg = d3.select("#timeline-div").append("svg")
+    timeline.svg = d3.select("#performance").append("svg")
         .attr("width", timeline.width + "px")
-        .attr("height", "80px")
+        .attr("height", timeline.height + "px")
         .attr("preserveAspectRatio", "none");
 
-    timeline.g = timeline.svg.append("g")
-        .attr("transform", "translate(" + timeline.margin.left + "," + (timeline.margin.top + 4) + ")");
+    timeline.g = timeline.svg.append("g");
 
     timeline.x = d3.scaleBand().rangeRound([0, timeline.width]).padding(0.1);
     timeline.y = d3.scaleLinear().rangeRound([timeline.height, 0]);

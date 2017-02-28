@@ -37,6 +37,27 @@
     margin-top: 20px;
 }
 
+
+#warnings ul {
+    width: 100%;
+    padding: 10px;
+}
+
+#warnings li {
+    text-align: left;
+    background-color: #ffea00; /* yellow accent-2 */
+    border: 1px solid #ffff8d; /* yellow accent-1 */
+    border-radius: 5px;
+    -moz-box-shadow:    2px 2px 3px 3px #ccc;
+    -webkit-box-shadow: 2px 2px 3px 3px #ccc;
+    box-shadow:         2px 2px 3px 3px #ccc;
+
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 5px 10px 5px 10px;
+}
+
+
 /* SVG Styles -------------------------------------------------------------- */
 .bar {
     fill: #b0bec5; /* blue-grey lighten-3 */

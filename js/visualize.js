@@ -5,7 +5,7 @@
 // ----------------------------------------------------------------------------
 
 // Initialized when data is loaded.
-dataset = null;
+all_etfs = null;
 
 // Modified as user adds/removes ETFs from the ETF drawer.
 selected_etfs = null;
@@ -15,9 +15,10 @@ selected_etfs = null;
 // Dataset wrangling
 // ----------------------------------------------------------------------------
 
+var parseDate = d3.timeParse("%m/%d/%Y");
+
 // This function loads our CSV dataset, parsing into per-row JSON objects.
 function load_dataset(callback) {
-    var parseDate = d3.timeParse("%m/%d/%Y");
     d3.csv("data/historical_nav.csv", function(d) {
         // Build a JSON object for each row.
         return {

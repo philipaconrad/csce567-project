@@ -5,7 +5,7 @@
 // ----------------------------------------------------------------------------
 
 // Initialized when data is loaded.
-dataset = null;
+all_etfs = null;
 
 // Modified as user adds/removes ETFs from the ETF drawer.
 selected_etfs = null;

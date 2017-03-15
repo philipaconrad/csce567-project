@@ -1,58 +1,19 @@
-var timeline = { "svg": null,
-    "g": null,
-    "x": null,
-    "y": null
-};
-timeline.width = parseInt(d3.select('#performance').style('width'), 10);
-timeline.height = 180;
+// visualize.js -- Code for wrangling ETF data.
 
-
-// Function to display timeline.
-// Note: Requires some hacking for size and position adjustments.
-function renderTimeline() {
-    // update width
-    timeline.width = parseInt(d3.select('#performance').style('width'), 10);
-
-    // remove it already displaying
-    d3.select("svg").remove();
-
-    timeline.svg = d3.select("#performance").append("svg")
-        .attr("width", timeline.width + "px")
-        .attr("height", timeline.height + "px")
-        .attr("preserveAspectRatio", "none");
-
-    timeline.g = timeline.svg.append("g");
-
-    timeline.x = d3.scaleBand().rangeRound([0, timeline.width]).padding(0.1);
-    timeline.y = d3.scaleLinear().rangeRound([timeline.height, 0]);
-
-    d3.tsv("data/data.tsv", function(d) {
-        d.frequency = +d.frequency;
-        return d;
-    }, function(error, data) {
-        if (error) throw error;
-
-        timeline.x.domain(data.map(function(d) { return d.letter; }));
-        timeline.y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
-
-        timeline.g.selectAll(".bar")
-            .data(data)
-            .enter().append("rect")
-            .attr("class", "bar")
-            .attr("x", function(d) { return timeline.x(d.letter); })
-            .attr("y", function(d) { return timeline.y(d.frequency); })
-            .attr("width", timeline.x.bandwidth())
-            .attr("height", function(d) { return timeline.height - timeline.y(d.frequency); })
-    });
-
-}
-
-window.addEventListener('resize', renderTimeline);
-renderTimeline();
-
+// ----------------------------------------------------------------------------
+// Globals
+// ----------------------------------------------------------------------------
 
 // Initialized when data is loaded.
 dataset = null;
+
+// Modified as user adds/removes ETFs from the ETF drawer.
+selected_etfs = null;
+
+
+// ----------------------------------------------------------------------------
+// Dataset wrangling
+// ----------------------------------------------------------------------------
 
 // This function loads our CSV dataset, parsing into per-row JSON objects.
 function load_dataset(callback) {
@@ -81,6 +42,10 @@ function load_dataset(callback) {
 }
 
 
+// ----------------------------------------------------------------------------
+// Miscellaneous functions
+// ----------------------------------------------------------------------------
+
 // Function to show unique ProShares/Ticker names.
 function display_proshares() {
     // Display ProShares names in console.
@@ -92,6 +57,10 @@ function display_proshares() {
     console.log(d3.set(tickers).values());
 }
 
+
+// ----------------------------------------------------------------------------
+// Initialization functions
+// ----------------------------------------------------------------------------
 
 // This function runs once the document has loaded/rendered.
 $(document).ready(function () {

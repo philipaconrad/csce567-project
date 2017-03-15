@@ -41,6 +41,40 @@ function load_dataset(callback) {
     });
 }
 
+// This function loads a specific etf, parsing the arrays properly
+function load_etf(etfName, callback) {
+    var parseDate = d3.timeParse("%m/%d/%Y");
+    d3.json("data/json_files_tickers/" + etfName.toUpperCase() + ".json", function(d) {
+        // Build a JSON object for each row.
+        var out = {
+            date: [],
+            nav: [],
+            yhv: []
+        };
+        var dates = d['Date'];
+        dates.forEach(function(o) {
+            out.date.push(parseDate(o))
+        });
+        var navs = d['NAV'];
+        navs.forEach(function(o) {
+            out.nav.push(+o)
+        });
+        var yhvs = d['YHV'];
+        yhvs.forEach(function(o) {
+            out.yhv.push(+o)
+        });
+        console.log(out);
+        return out;
+    }, function(error, data) {
+        // Push the resulting list of objects to a global.
+        console.info(data);
+        // If a callback was provided, call it.
+        if (typeof(callback) === "function" && callback) {
+            callback();
+        }
+    });
+}
+
 
 // ----------------------------------------------------------------------------
 // Miscellaneous functions

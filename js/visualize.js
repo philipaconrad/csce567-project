@@ -5,10 +5,10 @@
 // ----------------------------------------------------------------------------
 
 // Initialized when data is loaded.
-var all_etfs = null;
+var allETFs = null;
 
 // Modified as user adds/removes ETFs from the ETF drawer.
-var selected_etfs = null;
+var selectedETFs = null;
 
 
 // ----------------------------------------------------------------------------
@@ -18,29 +18,39 @@ var selected_etfs = null;
 var parseDate = d3.timeParse("%m/%d/%Y");
 
 // This function loads our CSV dataset, parsing into per-row JSON objects.
-function load_dataset(callback) {
+function loadDataset(callback) {
     d3.json("data/historical_nav_details.json", function(d) {
+        // Function to help add values to object so no empty or undefined values are added
+        function addValue(value, tickerObject, key) {
+            if (value !== undefined && value !== null && Object.keys(value).length > 0) {
+                tickerObject[key] = value
+            }
+        }
+
         // Build a JSON object for each row.
         var data = {};
 
         for (var key in d) {
             if (d.hasOwnProperty(key)) {
-                data[key] = {
+                var tickerObj = {
                     ticker: key,
-                    proshares_name: d[key]['Name'],
-                    holdings: d[key]['Holdings'],
-                    holdings_long: d[key]['HoldingLong'],
-                    holdings_short: d[key]['HoldingsShort'],
-                    sectors: d[key]['Sectors'],
-                    sectors_long: d[key]['SectorsLong'],
-                    sectors_short: d[key]['SectorsShort'],
-                    sub_sectors: d[key]['SubSectors'],
-                    countries: d[key]['Countries']
+                    proshares_name: d[key]['Name']
                 };
+
+                addValue(d[key]['Holdings'], tickerObj, 'holdings');
+                addValue(d[key]['HoldingLong'], tickerObj, 'holdingsLong');
+                addValue(d[key]['HoldingsShort'], tickerObj, 'holdingsShort');
+                addValue(d[key]['Sectors'], tickerObj, 'sectors');
+                addValue(d[key]['SectorsLong'], tickerObj, 'sectorsLong');
+                addValue(d[key]['SectorsShort'], tickerObj, 'sectorsShort');
+                addValue(d[key]['SubSectors'], tickerObj, 'subSectors');
+                addValue(d[key]['Countries'], tickerObj, 'countries');
+
+                data[key] = tickerObj;
             }
         }
         // Set the resulting list of objects to a global.
-        all_etfs = data;
+        allETFs = data;
 
         // If a callback was provided, call it.
         if (typeof(callback) === "function" && callback) {
@@ -50,13 +60,13 @@ function load_dataset(callback) {
 }
 
 // This function loads a specific etf, parsing the arrays properly
-function load_etf(etfTicker, callback) {
+function loadETF(etfTicker, callback) {
     // Upper case Ticker
     etfTicker = etfTicker.toUpperCase();
 
     // Check if ETF already loaded. If so, skip loading again
-    if (all_etfs.hasOwnProperty(etfTicker)) {
-        if (all_etfs[etfTicker].hasOwnProperty('NAV')) {
+    if (allETFs.hasOwnProperty(etfTicker)) {
+        if (allETFs[etfTicker].hasOwnProperty('NAV')) {
             // If a callback was provided, call it.
             if (typeof(callback) === "function" && callback) {
                 callback();
@@ -64,7 +74,7 @@ function load_etf(etfTicker, callback) {
             return;
         }
     } else {
-        // Don't populate if etf is not in all_etfs.
+        // Don't populate if etf is not in allETFs.
         return;
     }
 
@@ -76,20 +86,20 @@ function load_etf(etfTicker, callback) {
 
         var dates = d['Date'];
         dates.forEach(function(o) {
-            date.push(parseDate(o))
+            date.push(parseDate(o));
         });
         var navs = d['NAV'];
         navs.forEach(function(o) {
-            nav.push(+o)
+            nav.push(+o);
         });
         var yhvs = d['YHV'];
         yhvs.forEach(function(o) {
-            yhv.push(+o)
+            yhv.push(+o);
         });
 
-        all_etfs[etfTicker]['date'] = date;
-        all_etfs[etfTicker]['nav'] = nav;
-        all_etfs[etfTicker]['yhv'] = yhv;
+        allETFs[etfTicker]['date'] = date;
+        allETFs[etfTicker]['nav'] = nav;
+        allETFs[etfTicker]['yhv'] = yhv;
 
         // If a callback was provided, call it.
         if (typeof(callback) === "function" && callback) {
@@ -104,13 +114,13 @@ function load_etf(etfTicker, callback) {
 // ----------------------------------------------------------------------------
 
 // Function to show unique ProShares/Ticker names.
-function display_proshares() {
+function displayProshares() {
     // Display ProShares names in console.
-    // ERROR HERE HAD TO COMMENT OUT var names = all_etfs.map(function(d) { return d.proshares_name });
+    // ERROR HERE HAD TO COMMENT OUT var names = allETFs.map(function(d) { return d.proshares_name });
     // Filter to just the unique values.
     // ERROR HERE HAD TO COMMENT OUTconsole.log(d3.set(names).values());
     // Repeat the process for ticker names.
-    // ERROR HERE HAD TO COMMENT OUTvar tickers = all_etfs.map(function(d) { return d.ticker });
+    // ERROR HERE HAD TO COMMENT OUTvar tickers = allETFs.map(function(d) { return d.ticker });
     // ERROR HERE HAD TO COMMENT OUTconsole.log(d3.set(tickers).values());
 }
 
@@ -122,8 +132,8 @@ function display_proshares() {
 // This function runs once the document has loaded/rendered.
 $(document).ready(function () {
     // Use dumb-but-effective callback chaining to get things done.
-    load_dataset(function (){
-        console.info(all_etfs);
-        display_proshares();
+    loadDataset(function (){
+        console.info(allETFs);
+        displayProshares();
     });
 });

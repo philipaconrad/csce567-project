@@ -115,13 +115,20 @@ function loadETF(etfTicker, callback) {
 
 // Function to show unique ProShares/Ticker names.
 function displayProshares() {
-    // Display ProShares names in console.
-    // ERROR HERE HAD TO COMMENT OUT var names = allETFs.map(function(d) { return d.proshares_name });
-    // Filter to just the unique values.
-    // ERROR HERE HAD TO COMMENT OUTconsole.log(d3.set(names).values());
-    // Repeat the process for ticker names.
-    // ERROR HERE HAD TO COMMENT OUTvar tickers = allETFs.map(function(d) { return d.ticker });
-    // ERROR HERE HAD TO COMMENT OUTconsole.log(d3.set(tickers).values());
+    var drawerDiv = document.getElementById('etf-drawer');
+    var html = '';
+    for (var key in allETFs) {
+        if (allETFs.hasOwnProperty(key)){
+        html += '<div class="col m2">'+
+                '<div class="card blue-grey darken-1">' +
+                '<div class="card-content white-text">' +
+                '<span class="etf-title">' + allETFs[key].ticker +'</span>' +
+                '<div class="etf-info">' +
+                '<p>' + allETFs[key].proshares_name +'</p>' +
+                '</div></div></div></div>';
+            }
+        }
+    drawerDiv.innerHTML = html;
 }
 
 

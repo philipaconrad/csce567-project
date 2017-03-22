@@ -1,108 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
+    <meta charset="utf-8" />
 
-  <!-- Import Google Icon Font -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- Import materialize.css -->
-  <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <!-- Import Google Icon Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Import materialize.css -->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
 
-  <!-- Let browser know website is optimized for mobile -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Let browser know website is optimized for mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <!-- Styles -->
-  <link type="text/css" rel="stylesheet" href="css/visualization.css"/>
+    <!-- Styles -->
+    <link type="text/css" rel="stylesheet" href="css/visualization.css"/>
 
-  <title>ETF Visualization</title>
+    <title>ETF Visualization</title>
 </head>
 </head>
 <body>
-  <!-- Main Nav bar. -->
-  <div class="navbar-fixed">
-    <nav>
-      <div class="nav-wrapper blue darken-2">
-        <a href="#!" class="brand-logo">&nbsp; ETF Visualization</a>
-        <ul class="right hide-on-med-and-down">
-          <li><a href="javascript:slide_toggle_div('settings');"><i class="material-icons left">settings</i> Settings</a></li>
-        </ul>
-        <ul class="right hide-on-med-and-down">
-          <li><a href="javascript:save_settings();"><i class="material-icons left">loop</i> Refresh</a></li>
-        </ul>
-      </div>
-    </nav>
-  </div>
-
-  <!-- Main Settings Area. -->
-  <div id="settings" class="blue darken-2 white-text" style="display: none">
-    <br>
-    <form class="container" name="settings">
-      <div class="row">
-        <div class="input-field col 12 s3">
-          <i class="material-icons prefix">mode_edit</i>
-          <input name="filename" id="filename" type="text" class="validate" placeholder="Data file">
-          <label for="filename">Data Filename</label>
-        </div>
-        <div class="input-field col 12 s3">
-          <i class="material-icons prefix">label_outline</i>
-          <a class="waves-effect waves-light btn green" id="connection-btn" onclick="javascript:save_settings();javascript:create_sidebar();">Refresh</a>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <!-- Main content. -->
-  <div class="container">
-
-    <div class="row">
-
-      <!-- Left Column -->
-      <div class="col s9">
-        <!-- Portfolio performance plot. -->
-        <div class="row">
-          <div id="performance" class="grey lighten-2">
-          </div>
-        </div>
-
-        <!-- Portfolio drawer. -->
-        <div class="row">
-          <div id="portfolio" class="grey lighten-2">
-          </div>
-        </div>
-
-        <!-- ETF workspace area. -->
-        <div class="row">
-          <div id="workspace" class="s9 grey lighten-2">
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column -->
-      <div class="col s3">
-        <!-- Warnings area  -->
-        <div id="warnings" class="grey lighten-3">
-          <ul>
-            <li id="warn-low-diversity" style="display: none">Low Diversity</li>
-            <li id="warn-high-volatility" style="display: none">High Volatility</li>
-            <li id="warn-low-profit" style="display: none">Low Profit</li>
-          </ul>
-        </div>
-      </div>
-
+    <!-- Main Nav bar. -->
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper blue darken-2">
+                <a href="#!" class="brand-logo">&nbsp; ETF Visualization</a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="javascript:slide_toggle_div('settings');"><i class="material-icons left">settings</i> Settings</a></li>
+                </ul>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="javascript:save_settings();"><i class="material-icons left">loop</i> Refresh</a></li>
+                </ul>
+            </div>
+        </nav>
     </div>
 
-  </div>
+    <!-- Main Settings Area. -->
+    <div id="settings" class="blue darken-2 white-text" style="display: none">
+        <br>
+        <form class="container" name="settings">
+            <div class="row">
+                <div class="input-field col 12 s3">
+                    <i class="material-icons prefix">mode_edit</i>
+                    <input name="filename" id="filename" type="text" class="validate" placeholder="Data file">
+                    <label for="filename">Data Filename</label>
+                </div>
+                <div class="input-field col 12 s3">
+                    <i class="material-icons prefix">label_outline</i>
+                    <a class="waves-effect waves-light btn green" id="connection-btn" onclick="javascript:save_settings();javascript:create_sidebar();">Refresh</a>
+                </div>
+            </div>
+        </form>
+    </div>
 
-  <!-- Import jQuery. -->
-  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <!-- Import materialize after jQuery. -->
-  <script type="text/javascript" src="js/materialize.min.js"></script>
-  <!-- Import D3.js -->
-  <script type="text/javascript" src="js/d3.min.js"></script>
-  <!-- Import UI code. -->
-  <script type="text/javascript" src="js/ui.js"></script>
-  <!-- Import Visualization code -->
-  <script type="text/javascript" src="js/visualize.js"></script>
+    <!-- Main content. -->
+    <div class="container">
+
+        <div class="row">
+
+            <!-- Left Column -->
+            <div class="col s9">
+                <!-- Portfolio performance plot. -->
+                <div class="row">
+                    <div id="performance" class="grey lighten-2">
+                    </div>
+                </div>
+
+                <!-- Portfolio drawer. -->
+                <div class="row">
+                    <div id="portfolio" class="grey lighten-2">
+                    </div>
+                </div>
+
+                <!-- ETF workspace area. -->
+                <div class="row">
+                    <div id="workspace" class="s9 grey lighten-2">
+                        <!-- ETF cards -->
+                        <div id="etf-drawer" class="row">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column -->
+            <div class="col s3">
+                <!-- Warnings area  -->
+                <div id="warnings" class="grey lighten-3">
+                    <ul>
+                        <li id="warn-low-diversity" style="display: none">Low Diversity</li>
+                        <li id="warn-high-volatility" style="display: none">High Volatility</li>
+                        <li id="warn-low-profit" style="display: none">Low Profit</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import jQuery. -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!-- Import materialize after jQuery. -->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <!-- Import D3.js -->
+    <script type="text/javascript" src="js/d3.min.js"></script>
+    <!-- Import UI code. -->
+    <script type="text/javascript" src="js/ui.js"></script>
+    <!-- Import Visualization code -->
+    <script type="text/javascript" src="js/visualize.js"></script>
 
 </body>
 </html>

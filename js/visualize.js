@@ -117,17 +117,30 @@ function loadETF(etfTicker, callback) {
 function displayProshares() {
     var drawerDiv = document.getElementById('etf-drawer');
     var html = '';
+    var i = 0;
     for (var key in allETFs) {
-        if (allETFs.hasOwnProperty(key)){
-        html += '<div class="col m2">'+
-                '<div class="card blue-grey darken-1">' +
-                '<div class="card-content white-text">' +
-                '<span class="etf-title">' + allETFs[key].ticker +'</span>' +
-                '<div class="etf-info">' +
-                '<p>' + allETFs[key].proshares_name +'</p>' +
-                '</div></div></div></div>';
-            }
+        // Start a new row.
+        if (i == 0) {
+            html += '<div class="row">';
         }
+        // Add an ETF card.
+        if (allETFs.hasOwnProperty(key)) {
+            html += '<div class="col m2">'+
+                    '<div class="card blue-grey darken-1">' +
+                    '<div class="card-content white-text">' +
+                    '<span class="etf-title">' + allETFs[key].ticker +
+                    '</span>' +
+                    '<div class="etf-info">' +
+                    '<p>' + allETFs[key].proshares_name +'</p>' +
+                    '</div></div></div></div>'
+        }
+        i += 1;
+        // End the row.
+        if (i == 6) {
+            html += '</div>';
+            i = 0;
+        }
+    }
     drawerDiv.innerHTML = html;
 }
 

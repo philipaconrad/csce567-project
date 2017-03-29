@@ -37,6 +37,14 @@
     margin-top: 20px;
 }
 
+.etf-title {
+    font-size: 20px;
+
+}
+
+.etf-info {
+    font-size: 10px;
+}
 
 #warnings ul {
     width: 100%;

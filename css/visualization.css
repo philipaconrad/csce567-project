@@ -66,3 +66,9 @@
 .bar:hover {
     fill: #ff5722; /* deep-orange */
 }
+
+/* Performance SVG Styles -------------------------------------------------- */
+#performance-svg .line {
+	fill: none;
+	stroke: #000;
+}

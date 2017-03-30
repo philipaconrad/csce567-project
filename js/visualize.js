@@ -116,7 +116,6 @@ function loadETF(etfTicker, callback) {
 // Miscellaneous functions
 // ----------------------------------------------------------------------------
 
-
 // Added ETF to selected ETFs
 function selectETF(etf) {
     if (selectedETFs.contains(etf)) {
@@ -186,6 +185,11 @@ function averageSelectedETFs() {
 
     return dateArray;
 }
+
+
+// ----------------------------------------------------------------------------
+// Display functions
+// ----------------------------------------------------------------------------
 
 // Function to show unique ProShares/Ticker names.
 function displayProshares() {
@@ -268,6 +272,13 @@ function displayPerformanceGraph() {
 	svg.append("g")
 		.call(d3.axisLeft(y));
 }
+
+// Function to render page again
+function render() {
+    displayProshares();
+    displayPerformanceGraph();
+}
+
 
 // ----------------------------------------------------------------------------
 // Initialization functions

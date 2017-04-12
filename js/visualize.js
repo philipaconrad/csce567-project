@@ -292,3 +292,8 @@ $(document).ready(function () {
         render();
     });
 });
+
+// This function resizes the graph when the window is resized
+$(window).resize(function () {
+    render();
+});

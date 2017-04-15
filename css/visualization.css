@@ -17,7 +17,8 @@
 }
 
 #portfolio {
-    height: 120px;
+    height: 145px;
+    overflow-x: auto;
 }
 
 #warnings {
@@ -27,6 +28,7 @@
 
 #workspace {
     min-height: 420px;
+    height: 450px;
 }
 
 .row {
@@ -79,4 +81,21 @@
 #performance-svg .line {
 	fill: none;
 	stroke: #000;
+}
+
+#etf-drawer {
+    height: 100%;
+    overflow-y: auto;
+}
+
+#portfolio-drawer {
+    height: 100%;
+    display: inline-flex;
+}
+
+.card {
+    margin: 4px 4px 4px 4px;
+    width: 120px;
+    height: 120px;
+    float: left;
 }

@@ -118,7 +118,7 @@ function loadETF(etfTicker, callback) {
 
 // Added ETF to selected ETFs
 function selectETF(etf) {
-    if (selectedETFs.contains(etf)) {
+    if (selectedETFs.indexOf(etf) != -1) {
         return;
     }
 
@@ -133,7 +133,7 @@ function selectETF(etf) {
 
 // Remove ETF from selected ETFs
 function removeETF(etf) {
-    if (!selectedETFs.contains(etf)) {
+    if (selectedETFs.indexOf(etf) == -1) {
         return;
     }
 
@@ -195,37 +195,48 @@ function averageSelectedETFs() {
 function displayProshares() {
     var drawerDiv = document.getElementById('etf-drawer');
     var html = '';
-    var i = 0;
     for (var key in allETFs) {
-        // Start a new row.
-        if (i == 0) {
-            html += '<div class="row">';
-        }
         // Add an ETF card.
-        if (allETFs.hasOwnProperty(key)) {
-            html += '<div class="col m2">'+
-                    '<div class="card blue-grey darken-1">' +
+        if (allETFs.hasOwnProperty(key) && selectedETFs.indexOf(key) == -1) {
+            html += '<div class="card blue-grey darken-1" onclick="selectETF(\'' + key + '\')">' +
                     '<div class="card-content white-text">' +
                     '<span class="etf-title">' + allETFs[key].ticker +
                     '</span>' +
                     '<div class="etf-info">' +
                     '<p>' + allETFs[key].proshares_name +'</p>' +
-                    '</div></div></div></div>'
-        }
-        i += 1;
-        // End the row.
-        if (i == 6) {
-            html += '</div>';
-            i = 0;
+                    '</div></div></div>'
         }
     }
     drawerDiv.innerHTML = html;
 }
 
+// Function to show selected ProShares/Ticker names.
+function displaySelectedProshares() {
+    var drawerDiv = document.getElementById('portfolio-drawer');
+    var html = '';
+    selectedETFs.forEach(function (etf) {
+        etf = etf.toUpperCase();
+        // Add an ETF card.
+        if (allETFs.hasOwnProperty(etf)) {
+            html += '<div class="card blue-grey darken-1" onclick="removeETF(\'' + etf + '\')">' +
+                '<div class="card-content white-text">' +
+                '<span class="etf-title">' + allETFs[etf].ticker +
+                '</span>' +
+                '<div class="etf-info">' +
+                '<p>' + allETFs[etf].proshares_name +'</p>' +
+                '</div></div></div>'
+        }
+    });
+    drawerDiv.innerHTML = html;
+}
+
 // Function to show the performance graph.
 function displayPerformanceGraph() {
+    d3.select("#performance-svg").select("g").remove();
+
 	// Get the data formatted and averaged from averageETFs function
 	var data = averageSelectedETFs();
+	console.info(data);
 	
 	// define dimensions of graph
 	var margin = {top: 20, right: 20, bottom: 20, left: 20}; // margins
@@ -276,6 +287,7 @@ function displayPerformanceGraph() {
 // Function to render page again
 function render() {
     displayProshares();
+    displaySelectedProshares();
     displayPerformanceGraph();
 }
 
@@ -293,7 +305,9 @@ $(document).ready(function () {
     });
 });
 
-// This function resizes the graph when the window is resized
-$(window).resize(function () {
-    render();
+// This function will run when the window is resized
+$(window).on('resize', function() {
+    if (allETFs != null) {
+        render();
+    }
 });

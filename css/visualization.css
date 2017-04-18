@@ -22,7 +22,7 @@
 }
 
 #warnings {
-    margin-top: 100px; /* Where the warnings top should be */
+    margin-top: 50px; /* Where the warnings top should be */
     height: 200px;
 }
 
@@ -67,6 +67,10 @@
     padding: 5px 10px 5px 10px;
 }
 
+.right-col {
+    padding-left: 20px;
+}
+
 
 /* SVG Styles -------------------------------------------------------------- */
 .bar {
@@ -95,7 +99,15 @@
 
 .card {
     margin: 4px 4px 4px 4px;
-    width: 120px;
-    height: 120px;
+    width: 125px;
+    height: 125px;
     float: left;
+}
+
+.tooltip-align {
+    text-align: left;
+}
+
+.tooltip-float {
+    float: right;
 }

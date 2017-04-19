@@ -299,7 +299,7 @@ function displayPerformanceGraph() {
     // Add the X Axis
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickFormat(d3.timeFormat('%b %Y')));
+        .call(d3.axisBottom(x));
 
     // Add the Y Axis
     svg.append("g")

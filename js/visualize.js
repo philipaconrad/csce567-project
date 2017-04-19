@@ -299,7 +299,7 @@ function displayPerformanceGraph() {
     // Add the X Axis
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x).tickFormat(d3.timeFormat('%b %Y')));
 
     // Add the Y Axis
     svg.append("g")
@@ -308,11 +308,11 @@ function displayPerformanceGraph() {
 
 // Function to add tooltips to all the etfs
 function addToolTips() {
-    function htmlForToolTip(label, object) {
-        var html = '<div class="tooltip-align"><u>' + label + '</u><br/>';
+    function htmlForToolTip(label, object, col) {
+        var html = '<div class="col s' + col + ' tooltip-align"><u>' + label + '</u><br/>';
         for (var key in object) {
             if (object.hasOwnProperty(key)) {
-                html += key + ': <span class="tooltip-float"">' + object[key] + '%</span><br/>';
+                html += key + ': <span class="tooltip-float">' + object[key] + '%</span><br/>';
             }
         }
         return html + '</div>';
@@ -320,21 +320,64 @@ function addToolTips() {
 
     for (var key in allETFs) {
         if (allETFs.hasOwnProperty(key)) {
-            var toolHtml = '';
+            var toolHtml = '<div class="row">';
+
             if (allETFs[key].hasOwnProperty('sectors')) {
-                toolHtml = htmlForToolTip('Sectors', allETFs[key]['sectors'])
-            } else if (allETFs[key].hasOwnProperty('countries')) {
-                toolHtml = htmlForToolTip('Countries', allETFs[key]['countries'])
-            } else {
+                toolHtml += htmlForToolTip('Sectors', allETFs[key]['sectors'], 12);
+            }
+
+            if (allETFs[key].hasOwnProperty('countries')) {
+                toolHtml += htmlForToolTip('Countries', allETFs[key]['countries'], 12);
+            }
+
+            if (allETFs[key].hasOwnProperty('sectorsLong')) {
+                toolHtml += htmlForToolTip('Sectors Long', allETFs[key]['sectorsLong'], 6);
+            }
+            if (allETFs[key].hasOwnProperty('sectorsShort')) {
+                toolHtml += htmlForToolTip('Sectors Short', allETFs[key]['sectorsShort'], 6);
+            }
+
+            toolHtml += '</div><div class="row">';
+            var foundOther = false;
+            if (allETFs[key].hasOwnProperty('holdingsLong')) {
+                foundOther = true;
+                toolHtml += htmlForToolTip('Holdings Long', allETFs[key]['holdingsLong'], 6);
+            }
+            if (allETFs[key].hasOwnProperty('holdingsShort')) {
+                foundOther = true;
+                toolHtml += htmlForToolTip('Holdings Short', allETFs[key]['holdingsShort'], 6);
+            }
+            if (allETFs[key].hasOwnProperty('holdings')) {
+                foundOther = true;
+                toolHtml += htmlForToolTip('Holdings', allETFs[key]['holdings'], 12);
+            }
+
+
+            if (!foundOther) {
+                toolHtml = toolHtml.substring(0, toolHtml.indexOf('</div>'));
+            }
+
+            if (toolHtml.length < 50) {
                 toolHtml = 'Detailed info about this ETF is not available.';
             }
-            $('#etf-' + key).tooltip({delay:5, html: true, position: 'top', tooltip: toolHtml});
+
+            toolHtml += '</div>';
+            $('#etf-' + key).tooltip({delay:350, html: true, position: 'top', tooltip: toolHtml});
+        }
+    }
+}
+
+function removeToolTips() {
+    for (var key in allETFs) {
+        if (allETFs.hasOwnProperty(key)) {
+            $('#etf-' + key).tooltip('remove');
         }
     }
 }
 
 // Function to render page again
 function render() {
+    removeToolTips();
     displayProshares();
     displaySelectedProshares();
     displayPerformanceGraph();

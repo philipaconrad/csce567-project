@@ -237,14 +237,14 @@ function displayPerformanceGraph() {
 	// Get the data formatted and averaged from averageETFs function
 	var data = averageSelectedETFs();
 	console.info(data);
-	
+
 	// define dimensions of graph
 	var margin = {top: 20, right: 20, bottom: 20, left: 20}; // margins
 	var width = parseInt(d3.select("#performance").style("width"), 10);
 	width = width - margin.top - margin.bottom; // width
 	var height = parseInt(d3.select("#performance").style("height"), 10);
 	height = height - margin.right - margin.right; // height
-	
+
 	// Set the ranges
 	var x = d3.scaleTime().range([0, width]);
 	var y = d3.scaleLinear().range([height, 0]);
@@ -291,6 +291,10 @@ function render() {
     displayPerformanceGraph();
 }
 
+function clear() {
+    selectedETFs = [];
+    render();
+}
 
 // ----------------------------------------------------------------------------
 // Initialization functions

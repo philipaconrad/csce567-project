@@ -43,19 +43,3 @@ function load_settings() {
 function save_settings() {
     localStorage.server_url = $('#filename').val();
 }
-
-// Waring types:
-// - "low-profit"
-// - "low-diversity"
-// - "high-volatility"
-function enable_warning(warn_type) {
-	$("#warn-"+warn_type).fadeIn(1000, function() {
-
-	});
-}
-
-function disable_warning(warn_type) {
-	$("#warn-"+warn_type).fadeOut(1000, function() {
-
-	});
-}

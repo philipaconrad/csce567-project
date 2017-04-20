@@ -21,7 +21,7 @@ var formatDate = d3.timeFormat("%y/%m/%d");
 
 // This function loads our CSV dataset, parsing into per-row JSON objects.
 function loadDataset(callback) {
-    d3.json("data/historical_nav_details.json", function(d) {
+    d3.json("data/historical_nav_details.json", function (d) {
         // Function to help add values to object so no empty or undefined values are added
         function addValue(value, tickerObject, key) {
             if (value !== undefined && value !== null && Object.keys(value).length > 0) {
@@ -40,7 +40,7 @@ function loadDataset(callback) {
                 };
 
                 addValue(d[key]['Holdings'], tickerObj, 'holdings');
-                addValue(d[key]['HoldingLong'], tickerObj, 'holdingsLong');
+                addValue(d[key]['HoldingsLong'], tickerObj, 'holdingsLong');
                 addValue(d[key]['HoldingsShort'], tickerObj, 'holdingsShort');
                 addValue(d[key]['Sectors'], tickerObj, 'sectors');
                 addValue(d[key]['SectorsLong'], tickerObj, 'sectorsLong');
@@ -81,22 +81,22 @@ function loadETF(etfTicker, callback) {
         return;
     }
 
-    d3.json("data/json_files_tickers/" + etfTicker + ".json", function(d) {
+    d3.json("data/json_files_tickers/" + etfTicker + ".json", function (d) {
         // Build a JSON object for ticker.
         var date = [];
         var nav = [];
         var yhv = [];
 
         var dates = d['Date'];
-        dates.forEach(function(o) {
+        dates.forEach(function (o) {
             date.push(parseDate(o));
         });
         var navs = d['NAV'];
-        navs.forEach(function(o) {
+        navs.forEach(function (o) {
             nav.push(+o);
         });
         var yhvs = d['YHV'];
-        yhvs.forEach(function(o) {
+        yhvs.forEach(function (o) {
             yhv.push(+o);
         });
 
@@ -126,7 +126,7 @@ function selectETF(etf) {
     selectedETFs.push(etf);
 
     // Load the etf data and in the callback render the page again
-    loadETF(etf, function() {
+    loadETF(etf, function () {
         render();
     });
 }
@@ -171,17 +171,25 @@ function averageSelectedETFs() {
 
     });
 
+    var datesSorted = [];
+    for (var d in dateMap) {
+        datesSorted.push(d);
+    }
+    datesSorted.sort();
+
     var dateArray = [];
     // Sum and get average of each date in the dateMap
-    for (var key in dateMap) {
-        if (dateMap.hasOwnProperty(key)) {
-            var sum = dateMap[key].reduce(function(a, b) { return a + b; });
+    datesSorted.forEach(function(date) {
+        if (dateMap.hasOwnProperty(date)) {
+            var sum = dateMap[date].reduce(function (a, b) {
+                return a + b;
+            });
             dateArray.unshift({
-                'date': parseDateBack(key),
-                'average': sum / dateMap[key].length
+                'date': parseDateBack(date),
+                'average': sum / dateMap[date].length
             });
         }
-    }
+    });
 
     return dateArray;
 }
@@ -195,18 +203,23 @@ function averageSelectedETFs() {
 function displayProshares() {
     var drawerDiv = document.getElementById('etf-drawer');
     var html = '';
-    for (var key in allETFs) {
+    var keysSorted = [];
+    for (var k in allETFs) {
+        keysSorted.push(k);
+    }
+    keysSorted.sort();
+    keysSorted.forEach(function (key) {
         // Add an ETF card.
         if (allETFs.hasOwnProperty(key) && selectedETFs.indexOf(key) == -1) {
-            html += '<div class="card blue-grey darken-1" onclick="selectETF(\'' + key + '\')">' +
-                    '<div class="card-content white-text">' +
-                    '<span class="etf-title">' + allETFs[key].ticker +
-                    '</span>' +
-                    '<div class="etf-info">' +
-                    '<p>' + allETFs[key].proshares_name +'</p>' +
-                    '</div></div></div>'
+            html += '<div id="etf-' + key + '" class="card blue-grey darken-1" onclick="selectETF(\'' + key + '\')">' +
+                '<div class="card-content white-text">' +
+                '<span class="etf-title">' + allETFs[key].ticker +
+                '</span>' +
+                '<div class="etf-info">' +
+                '<p>' + allETFs[key].proshares_name + '</p>' +
+                '</div></div></div>'
         }
-    }
+    });
     drawerDiv.innerHTML = html;
 }
 
@@ -214,16 +227,16 @@ function displayProshares() {
 function displaySelectedProshares() {
     var drawerDiv = document.getElementById('portfolio-drawer');
     var html = '';
-    selectedETFs.forEach(function (etf) {
-        etf = etf.toUpperCase();
+    selectedETFs.forEach(function (key) {
+        key = key.toUpperCase();
         // Add an ETF card.
-        if (allETFs.hasOwnProperty(etf)) {
-            html += '<div class="card blue-grey darken-1" onclick="removeETF(\'' + etf + '\')">' +
+        if (allETFs.hasOwnProperty(key)) {
+            html += '<div id="etf-' + key + '" class="card blue-grey darken-1" onclick="removeETF(\'' + key + '\')">' +
                 '<div class="card-content white-text">' +
-                '<span class="etf-title">' + allETFs[etf].ticker +
+                '<span class="etf-title">' + allETFs[key].ticker +
                 '</span>' +
                 '<div class="etf-info">' +
-                '<p>' + allETFs[etf].proshares_name +'</p>' +
+                '<p>' + allETFs[key].proshares_name + '</p>' +
                 '</div></div></div>'
         }
     });
@@ -234,61 +247,141 @@ function displaySelectedProshares() {
 function displayPerformanceGraph() {
     d3.select("#performance-svg").select("g").remove();
 
-	// Get the data formatted and averaged from averageETFs function
-	var data = averageSelectedETFs();
-	console.info(data);
-	
-	// define dimensions of graph
-	var margin = {top: 20, right: 20, bottom: 20, left: 20}; // margins
-	var width = parseInt(d3.select("#performance").style("width"), 10);
-	width = width - margin.top - margin.bottom; // width
-	var height = parseInt(d3.select("#performance").style("height"), 10);
-	height = height - margin.right - margin.right; // height
-	
-	// Set the ranges
-	var x = d3.scaleTime().range([0, width]);
-	var y = d3.scaleLinear().range([height, 0]);
+    // Get the data formatted and averaged from averageETFs function
+    var data = averageSelectedETFs();
 
-	// define the line
-	var valueline = d3.line()
-		.x(function(d) { return x(d.date); })
-		.y(function(d) { return y(d.average); });
+    // define dimensions of graph
+    var margin = {top: 20, right: 40, bottom: 20, left: 60}; // margins
+    var width = parseInt(d3.select("#performance").style("width"), 10);
+    width = width - margin.left - margin.right; // width
+    var height = parseInt(d3.select("#performance").style("height"), 10);
+    height = height - margin.top - margin.bottom; // height
 
-	// append the svg obgect to the body of the page
-	// appends a 'group' element to 'svg'
-	// moves the 'group' element to the top left margin
-	var svg = d3.select("#performance-svg")
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
-		.append("g")
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    // Set the ranges
+    var x = d3.scaleTime().range([0, width]);
+    var y = d3.scaleLinear().range([height, 0]);
+
+    // define the line
+    var valueline = d3.line()
+        .x(function (d) {
+            return x(d.date);
+        })
+        .y(function (d) {
+            return y(d.average);
+        });
+
+    // append the svg obgect to the body of the page
+    // appends a 'group' element to 'svg'
+    // moves the 'group' element to the top left margin
+    var svg = d3.select("#performance-svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-	// Scale the range of the data
-		x.domain(d3.extent(data, function(d) { return d.date; }));
-		y.domain([d3.min(data, function(d) { return d.average; })-2, d3.max(data, function(d) { return d.average; })+2]);
+    // Scale the range of the data
+    x.domain(d3.extent(data, function (d) {
+        return d.date;
+    }));
+    y.domain([d3.min(data, function (d) {
+        return d.average;
+    }) - 2, d3.max(data, function (d) {
+        return d.average;
+    }) + 2]);
 
-	// Add the valueline path.
-	svg.append("path")
-		.data([data])
-		.attr("class", "line")
-		.attr("d", valueline);
+    // Add the valueline path.
+    svg.append("path")
+        .data([data])
+        .attr("class", "line")
+        .attr("d", valueline);
 
-	// Add the X Axis
-	svg.append("g")
-		.attr("transform", "translate(0," + height + ")")
-		.call(d3.axisBottom(x));
+    // Add the X Axis
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
 
-	// Add the Y Axis
-	svg.append("g")
-		.call(d3.axisLeft(y));
+    // Add the Y Axis
+    svg.append("g")
+        .call(d3.axisLeft(y));
+}
+
+// Function to add tooltips to all the etfs
+function addToolTips() {
+    function htmlForToolTip(label, object, col) {
+        var html = '<div class="col s' + col + ' tooltip-align"><u>' + label + '</u><br/>';
+        for (var key in object) {
+            if (object.hasOwnProperty(key)) {
+                html += key + ': <span class="tooltip-float">' + object[key] + '%</span><br/>';
+            }
+        }
+        return html + '</div>';
+    }
+
+    for (var key in allETFs) {
+        if (allETFs.hasOwnProperty(key)) {
+            var toolHtml = '<div class="row">';
+
+            if (allETFs[key].hasOwnProperty('sectors')) {
+                toolHtml += htmlForToolTip('Sectors', allETFs[key]['sectors'], 12);
+            }
+
+            if (allETFs[key].hasOwnProperty('countries')) {
+                toolHtml += htmlForToolTip('Countries', allETFs[key]['countries'], 12);
+            }
+
+            if (allETFs[key].hasOwnProperty('sectorsLong')) {
+                toolHtml += htmlForToolTip('Sectors Long', allETFs[key]['sectorsLong'], 6);
+            }
+            if (allETFs[key].hasOwnProperty('sectorsShort')) {
+                toolHtml += htmlForToolTip('Sectors Short', allETFs[key]['sectorsShort'], 6);
+            }
+
+            toolHtml += '</div><div class="row">';
+            var foundOther = false;
+            if (allETFs[key].hasOwnProperty('holdingsLong')) {
+                foundOther = true;
+                toolHtml += htmlForToolTip('Holdings Long', allETFs[key]['holdingsLong'], 6);
+            }
+            if (allETFs[key].hasOwnProperty('holdingsShort')) {
+                foundOther = true;
+                toolHtml += htmlForToolTip('Holdings Short', allETFs[key]['holdingsShort'], 6);
+            }
+            if (allETFs[key].hasOwnProperty('holdings')) {
+                foundOther = true;
+                toolHtml += htmlForToolTip('Holdings', allETFs[key]['holdings'], 12);
+            }
+
+
+            if (!foundOther) {
+                toolHtml = toolHtml.substring(0, toolHtml.indexOf('</div>'));
+            }
+
+            if (toolHtml.length < 50) {
+                toolHtml = 'Detailed info about this ETF is not available.';
+            }
+
+            toolHtml += '</div>';
+            $('#etf-' + key).tooltip({delay:350, html: true, position: 'top', tooltip: toolHtml});
+        }
+    }
+}
+
+function removeToolTips() {
+    for (var key in allETFs) {
+        if (allETFs.hasOwnProperty(key)) {
+            $('#etf-' + key).tooltip('remove');
+        }
+    }
 }
 
 // Function to render page again
 function render() {
+    removeToolTips();
     displayProshares();
     displaySelectedProshares();
     displayPerformanceGraph();
+    addToolTips();
 }
 
 
@@ -299,14 +392,14 @@ function render() {
 // This function runs once the document has loaded/rendered.
 $(document).ready(function () {
     // Use dumb-but-effective callback chaining to get things done.
-    loadDataset(function (){
+    loadDataset(function () {
         console.info(allETFs);
         render();
     });
 });
 
 // This function will run when the window is resized
-$(window).on('resize', function() {
+$(window).on('resize', function () {
     if (allETFs != null) {
         render();
     }

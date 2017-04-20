@@ -385,6 +385,8 @@ function render() {
 }
 
 function clear() {
+    // Inform user of reset.
+    Materialize.toast('Portfolio reset to defaults', 1000, 'green')
     selectedETFs = [];
     render();
 }

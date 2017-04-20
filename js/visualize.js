@@ -384,6 +384,10 @@ function render() {
     addToolTips();
 }
 
+function clear() {
+    selectedETFs = [];
+    render();
+}
 
 // ----------------------------------------------------------------------------
 // Initialization functions
